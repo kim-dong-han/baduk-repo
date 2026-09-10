@@ -1,0 +1,610 @@
+/* ============================================================================
+ * Design Token
+ * ----------------------------------------------------------------------------
+ * 이 파일은 "값"만 담는다. Tailwind 유틸리티 매핑과 base 스타일은 globals.css 에 있다.
+ *
+ * 3층 구조
+ *   1) 원시 토큰(palette)   --warm-600, --blue-600, --wood-500 …
+ *   2) 의미 토큰(semantic)  --text-secondary, --accent, --board-surface …
+ *   3) Tailwind 매핑        globals.css 의 @theme inline
+ *
+ * 컴포넌트는 3층만 쓴다. 1층을 직접 참조하지 않는다.
+ *
+ * 색 공간은 oklch 를 쓴다. 명도(L)를 고정한 채 색상만 옮길 수 있어
+ * 대비를 맞추기 쉽다. 차트 팔레트만 예외적으로 hex 인데,
+ * 접근성 검증기를 통과한 값 그대로를 남기기 위해서다. (docs/DESIGN_SYSTEM.md 참고)
+ * ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+ * 1. 원시 토큰 — Palette
+ * ------------------------------------------------------------------------- */
+:root {
+  /* --- 뉴트럴: 따뜻한 종이(paper) → 먹(ink) ---------------------------------
+   * hue 65~85 의 아주 낮은 채도. 차가운 회색을 쓰지 않는다.
+   * 차가운 회색은 화면을 병원처럼 만든다. */
+  --paper-0: oklch(1 0 0);
+  --paper-50: oklch(0.988 0.003 85);
+  --paper-100: oklch(0.972 0.004 85);
+  --paper-200: oklch(0.945 0.005 85);
+  --paper-300: oklch(0.905 0.006 85);
+  --warm-400: oklch(0.8 0.008 80);
+  --warm-500: oklch(0.65 0.009 78);
+  --warm-600: oklch(0.48 0.01 72);
+  --warm-700: oklch(0.38 0.01 70);
+  --warm-800: oklch(0.28 0.01 68);
+  --warm-900: oklch(0.2 0.01 65);
+  --warm-950: oklch(0.145 0.008 65);
+
+  /* --- Primary: 차분한 Blue -------------------------------------------------
+   * 형광기 없는 잉크빛 파랑. 600 이 기본이며 흰 텍스트로 4.9:1 을 낸다. */
+  --blue-50: oklch(0.965 0.014 248);
+  --blue-100: oklch(0.925 0.03 248);
+  --blue-200: oklch(0.86 0.052 248);
+  --blue-300: oklch(0.75 0.08 248);
+  --blue-400: oklch(0.63 0.11 248);
+  --blue-500: oklch(0.545 0.128 248);
+  --blue-600: oklch(0.47 0.115 248);
+  --blue-700: oklch(0.4 0.098 248);
+  --blue-800: oklch(0.33 0.08 248);
+
+  /* --- Success: 차분한 Green --------------------------------------------- */
+  --green-100: oklch(0.94 0.03 152);
+  --green-200: oklch(0.88 0.05 152);
+  --green-500: oklch(0.55 0.115 152);
+  --green-600: oklch(0.47 0.105 152);
+  --green-700: oklch(0.4 0.09 152);
+
+  /* --- Danger: 차분한 Red ------------------------------------------------- */
+  --red-100: oklch(0.945 0.025 28);
+  --red-200: oklch(0.89 0.045 28);
+  --red-500: oklch(0.55 0.165 28);
+  --red-600: oklch(0.47 0.15 28);
+  --red-700: oklch(0.4 0.13 28);
+
+  /* --- Warning: muted Gold -------------------------------------------------
+   * 노란색은 밝을수록 텍스트로 못 쓴다. 500 은 아이콘/채움, 700 이 텍스트용. */
+  --gold-100: oklch(0.955 0.03 85);
+  --gold-200: oklch(0.9 0.055 85);
+  --gold-500: oklch(0.62 0.105 80);
+  --gold-600: oklch(0.54 0.1 79);
+  --gold-700: oklch(0.45 0.09 78);
+
+  /* --- Clay: 실수(mistake) 단계용 중간 경고색 ----------------------------- */
+  --clay-100: oklch(0.95 0.025 48);
+  --clay-500: oklch(0.6 0.13 48);
+  --clay-600: oklch(0.52 0.125 48);
+
+  /* --- Board: 자연스러운 목재(비자나무) -----------------------------------
+   * 판은 노랗게 뜨지 않고, 어두워도 검어지지 않는다. */
+  --wood-100: oklch(0.925 0.038 80);
+  --wood-200: oklch(0.895 0.048 78);
+  --wood-300: oklch(0.87 0.056 76);
+  --wood-400: oklch(0.845 0.064 75);
+  --wood-500: oklch(0.82 0.07 74);
+  --wood-600: oklch(0.75 0.07 72);
+  --wood-700: oklch(0.66 0.068 70);
+  --wood-800: oklch(0.55 0.06 68);
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. 의미 토큰 — Light (기본)
+ * ------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  /* --- 표면 -----------------------------------------------------------------
+   * 모든 영역을 카드로 감싸지 않는다. 대부분의 콘텐츠는 page 위에 바로 놓이고,
+   * surface 는 실제로 분리가 필요한 영역에만 쓴다. */
+  --surface-page: var(--paper-50);
+  --surface-raised: var(--paper-0);
+  --surface-sunken: var(--paper-100);
+  --surface-overlay: var(--paper-0);
+
+  /* --- 텍스트 ---------------------------------------------------------------
+   * primary 15.9:1 / secondary 4.8:1 / tertiary 3.0:1 (page 대비)
+   * tertiary 는 본문에 쓰지 않는다. 라벨·캡션 전용. */
+  --text-primary: var(--warm-900);
+  --text-strong: var(--warm-950);
+  --text-secondary: var(--warm-600);
+  --text-tertiary: var(--warm-500);
+  --text-inverse: var(--paper-50);
+  --text-link: var(--blue-600);
+  --text-link-hover: var(--blue-700);
+
+  /* --- 경계선 ---------------------------------------------------------------
+   * 기본은 아주 연하게. 선으로 영역을 나누기 전에 여백으로 먼저 나눈다. */
+  --border-subtle: var(--paper-200);
+  --border-default: var(--paper-300);
+  --border-strong: var(--warm-400);
+  --border-focus: var(--blue-500);
+
+  /* --- 동작(action) --------------------------------------------------------- */
+  --accent: var(--blue-600);
+  --accent-hover: var(--blue-700);
+  --accent-active: var(--blue-800);
+  --accent-subtle: var(--blue-50);
+  --accent-subtle-border: var(--blue-100);
+  --accent-on: var(--paper-0);
+
+  /* --- 상태(status) — 항상 아이콘/텍스트와 함께 쓴다. 색만으로 알리지 않는다. */
+  --success: var(--green-600);
+  --success-surface: var(--green-100);
+  --success-border: var(--green-200);
+  --warning: var(--gold-700);
+  --warning-icon: var(--gold-500);
+  --warning-surface: var(--gold-100);
+  --warning-border: var(--gold-200);
+  --danger: var(--red-600);
+  --danger-hover: var(--red-700);
+  --danger-surface: var(--red-100);
+  --danger-border: var(--red-200);
+  --info: var(--blue-600);
+  --info-surface: var(--blue-50);
+  --info-border: var(--blue-100);
+
+  /* --- 폼 ------------------------------------------------------------------ */
+  --field-bg: var(--paper-0);
+  --field-border: var(--paper-300);
+  --field-border-hover: var(--warm-400);
+  --field-placeholder: var(--warm-500);
+  --field-disabled-bg: var(--paper-100);
+
+  /* =========================================================================
+   * Board Token — 바둑판은 카드 안의 작은 컴포넌트가 아니다.
+   * 별도의 토큰 계열을 갖는다.
+   * ======================================================================= */
+
+  /* 색 */
+  --board-surface: var(--wood-500);
+  --board-surface-light: var(--wood-400);
+  --board-surface-edge: var(--wood-700);
+  --board-frame: var(--wood-800);
+  --board-line: oklch(0.32 0.028 62 / 0.82);
+  --board-line-edge: oklch(0.3 0.028 62 / 0.95);
+  --board-star: oklch(0.28 0.028 62 / 0.92);
+  --board-coord: oklch(0.4 0.026 62 / 0.9);
+  --board-hover: oklch(0.32 0.028 62 / 0.14);
+  --board-last-move: var(--red-500);
+
+  --stone-black: oklch(0.19 0.008 265);
+  --stone-black-edge: oklch(0.34 0.012 265);
+  --stone-black-sheen: oklch(0.46 0.012 265 / 0.55);
+  --stone-white: oklch(0.975 0.004 90);
+  --stone-white-edge: oklch(0.79 0.008 85);
+  --stone-white-sheen: oklch(1 0 0 / 0.9);
+  --stone-shadow: oklch(0.24 0.02 62 / 0.28);
+  --stone-label-on-black: oklch(0.98 0 0);
+  --stone-label-on-white: oklch(0.2 0.008 265);
+
+  /* 기하 비율 — Canvas 렌더러가 격자 간격(gap)에 곱해 쓰는 값.
+   * 픽셀을 코드에 흩어놓지 않기 위해 여기 모은다. */
+  --board-stone-size: 0.94; /* 돌 지름 / 격자 간격 */
+  --board-star-size: 0.11; /* 화점 지름 / 격자 간격 */
+  --board-line-width: 0.035; /* 격자선 두께 / 격자 간격 */
+  --board-edge-width: 0.06; /* 외곽선 두께 / 격자 간격 */
+  --board-padding: 0.85; /* 판 가장자리 여백 / 격자 간격 (좌표 포함) */
+  --board-label-size: 0.5; /* 수순 숫자 크기 / 격자 간격 */
+  --board-coord-size: 0.42; /* 좌표 문자 크기 / 격자 간격 */
+  --board-marker-size: 0.42; /* 마커(△ □ 등) 크기 / 격자 간격 */
+
+  /* =========================================================================
+   * 분석 결과 — 예약된 상태 색. 차트 시리즈 색으로 재사용하지 않는다.
+   * 색만으로 구분하지 않고 항상 라벨/기호를 함께 붙인다.
+   * ======================================================================= */
+  --move-best: var(--blue-600); /* AI 최선 */
+  --move-good: var(--green-600); /* 좋은 수 */
+  --move-inaccuracy: var(--gold-600); /* 부정확 */
+  --move-mistake: var(--clay-600); /* 실수 */
+  --move-blunder: var(--red-600); /* 대악수 */
+
+  --move-best-surface: var(--blue-50);
+  --move-good-surface: var(--green-100);
+  --move-inaccuracy-surface: var(--gold-100);
+  --move-mistake-surface: var(--clay-100);
+  --move-blunder-surface: var(--red-100);
+
+  /* 승률 막대/영역은 실제 돌 색을 쓴다. 임의의 색을 입히지 않는다. */
+  --winrate-black: oklch(0.28 0.012 265);
+  --winrate-white: oklch(0.88 0.006 85);
+  --winrate-divider: var(--paper-0);
+
+  /* AI 후보수 오버레이 — 순위에 따른 단일 색조 램프 */
+  --candidate-1: oklch(0.55 0.115 152 / 0.9);
+  --candidate-2: oklch(0.62 0.09 152 / 0.75);
+  --candidate-3: oklch(0.7 0.06 152 / 0.6);
+  --candidate-rest: oklch(0.75 0.03 152 / 0.45);
+
+  /* =========================================================================
+   * Chart Token
+   * categorical 8슬롯 · sequential 6단계 · diverging 7단계.
+   * 값은 접근성 검증기를 통과한 hex 그대로다. 눈으로 고른 값이 아니다.
+   * 슬롯 순서는 고정이며 순환시키지 않는다. (근거: docs/DESIGN_SYSTEM.md)
+   * ======================================================================= */
+  --chart-surface: var(--surface-page);
+  --chart-grid: var(--paper-200);
+  --chart-axis: var(--paper-300);
+  --chart-axis-text: var(--text-secondary);
+
+  --series-1: #0b67a9; /* blue   */
+  --series-2: #b75f2c; /* clay   */
+  --series-3: #028a9b; /* teal   */
+  --series-4: #9c721c; /* gold   */
+  --series-5: #ae5a84; /* rose   */
+  --series-6: #036a34; /* green  */
+  --series-7: #2d8ab8; /* steel  */
+  --series-8: #9a322a; /* brick  */
+
+  /* 크기(magnitude)용 단일 색조 램프. 낮음 → 높음 */
+  --seq-1: #82acd5;
+  --seq-2: #6197ca;
+  --seq-3: #3f82be;
+  --seq-4: #166daf;
+  --seq-5: #0c5891;
+  --seq-6: #0b4572;
+
+  /* 극성(polarity)용. 집 차이처럼 0 을 기준으로 갈리는 값에 쓴다.
+   * neg = 백 우세(따뜻한 쪽), pos = 흑 우세(차가운 쪽), mid = 중립 회색 */
+  --div-neg-3: #8a4a1f;
+  --div-neg-2: #b8763f;
+  --div-neg-1: #dcae82;
+  --div-mid: #ddd9d2;
+  --div-pos-1: #8fb4d8;
+  --div-pos-2: #3d7fb5;
+  --div-pos-3: #12507f;
+
+  /* =========================================================================
+   * Typography
+   * 한국어 가독성이 최우선이다. 본문은 16px 아래로 내려가지 않는다.
+   * ======================================================================= */
+  --font-family-sans:
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Segoe UI', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+  --font-family-mono:
+    'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, 'D2Coding', monospace;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* 크기 — 13px 미만은 만들지 않는다. */
+  --font-size-caption: 0.8125rem; /* 13px 캡션·좌표·단위 */
+  --font-size-small: 0.875rem; /* 14px 보조 정보 */
+  --font-size-body: 1rem; /* 16px 본문 기본 */
+  --font-size-body-lg: 1.0625rem; /* 17px 상세 본문 */
+  --font-size-title-sm: 1.25rem; /* 20px 카드/블록 제목 */
+  --font-size-title: 1.5rem; /* 24px 섹션 제목 */
+  --font-size-title-lg: 1.875rem; /* 30px 페이지 제목 */
+  --font-size-display-sm: 2.25rem; /* 36px */
+  --font-size-display: 3rem; /* 48px 히어로 */
+
+  /* 행간 — 한글은 라틴보다 넉넉해야 읽힌다. */
+  --line-height-tight: 1.2;
+  --line-height-heading: 1.35;
+  --line-height-snug: 1.55;
+  --line-height-body: 1.7;
+
+  --letter-spacing-display: -0.02em;
+  --letter-spacing-heading: -0.01em;
+  --letter-spacing-body: 0;
+  --letter-spacing-label: 0.02em;
+
+  /* =========================================================================
+   * Spacing — 4px 배수. 이 사다리 밖의 값을 새로 만들지 않는다.
+   * ======================================================================= */
+  --space-1: 0.25rem; /*  4px */
+  --space-2: 0.5rem; /*  8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
+  --space-20: 5rem; /* 80px */
+
+  /* =========================================================================
+   * Radius — 8~16px. 20px 이상으로 둥글리지 않는다.
+   * ======================================================================= */
+  --corner-xs: 4px; /* 태그, 작은 표식 */
+  --corner-sm: 6px; /* 배지, 인풋 내부 요소 */
+  --corner-md: 8px; /* 기본: 버튼, 입력, 작은 패널 */
+  --corner-lg: 12px; /* 패널, 목록 블록 */
+  --corner-xl: 16px; /* 큰 패널, 모달, 바둑판 프레임 */
+  --corner-round: 9999px; /* 아바타, 점 표시에만 */
+
+  /* =========================================================================
+   * Shadow — 최소한으로. 떠 있어야 하는 것에만 쓴다.
+   * 검정이 아니라 따뜻한 갈색을 깔아야 종이 위 그림자처럼 보인다.
+   * ======================================================================= */
+  --elevation-tint: 0.24 0.014 68;
+  --elevation-xs: 0 1px 2px 0 oklch(var(--elevation-tint) / 0.05);
+  --elevation-sm:
+    0 1px 3px 0 oklch(var(--elevation-tint) / 0.07),
+    0 1px 2px -1px oklch(var(--elevation-tint) / 0.05);
+  --elevation-md:
+    0 4px 12px -2px oklch(var(--elevation-tint) / 0.08),
+    0 2px 4px -2px oklch(var(--elevation-tint) / 0.05);
+  --elevation-lg:
+    0 12px 32px -8px oklch(var(--elevation-tint) / 0.14),
+    0 4px 8px -4px oklch(var(--elevation-tint) / 0.06);
+  --elevation-stone: 0 1px 2px oklch(var(--elevation-tint) / 0.3);
+  --elevation-none: 0 0 #0000;
+
+  /* =========================================================================
+   * Layout — 데스크톱 중심. 상단 네비게이션. 좌측 고정 사이드바를 두지 않는다.
+   * ======================================================================= */
+  --layout-max: 1200px; /* 기본 콘텐츠 폭 */
+  --layout-max-wide: 1280px; /* 바둑판 + 분석 패널이 함께 놓이는 화면 */
+  --layout-max-prose: 720px; /* 읽기 위주의 글 */
+  --layout-gutter: var(--space-6); /* 데스크톱 좌우 여백 */
+  --layout-gutter-narrow: var(--space-4); /* 좁은 화면 좌우 여백 */
+  --layout-nav-height: 64px;
+  --layout-section-gap: var(--space-16); /* 섹션 사이 */
+  --layout-block-gap: var(--space-8); /* 블록 사이 */
+  --layout-board-min: 320px; /* 바둑판 최소 변 */
+  --layout-board-max: 720px; /* 바둑판 최대 변 */
+
+  /* =========================================================================
+   * Motion — 상태 변화 전달, hover, modal, loading 에만.
+   * ======================================================================= */
+  --easing-out: cubic-bezier(0.2, 0, 0, 1);
+  --easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-move: 90ms; /* 수순 이동 — 빠르게 넘겨도 밀리지 않아야 한다 */
+  --duration-fast: 120ms; /* hover, focus */
+  --duration-base: 180ms; /* 상태 변화 */
+  --duration-slow: 260ms; /* modal, drawer */
+
+  /* z-index — 숫자를 컴포넌트에 흩어놓지 않는다. */
+  --z-base: 0;
+  --z-board-overlay: 10;
+  --z-sticky: 100;
+  --z-nav: 200;
+  --z-dropdown: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. 의미 토큰 — Dark
+ *
+ * 아래 두 블록은 항상 같은 내용이어야 한다.
+ *   - @media 블록: OS 설정을 따른다
+ *   - [data-theme='dark']: 사용자가 직접 고른 값이 OS 설정을 이긴다
+ * 한쪽만 고치면 테마 토글이 어긋난다.
+ *
+ * 다크에서 바둑판은 검게 만들지 않는다. 나무 톤의 명도만 낮춘다.
+ * 판이 어두워지면 흑돌이 판에 묻혀 사라진다.
+ * ------------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --surface-page: oklch(0.18 0.008 70);
+    --surface-raised: oklch(0.22 0.008 70);
+    --surface-sunken: oklch(0.15 0.008 70);
+    --surface-overlay: oklch(0.25 0.008 70);
+
+    --text-primary: oklch(0.94 0.004 85);
+    --text-strong: oklch(0.98 0.003 85);
+    --text-secondary: oklch(0.72 0.008 78);
+    --text-tertiary: oklch(0.6 0.008 76);
+    --text-inverse: oklch(0.18 0.008 70);
+    --text-link: oklch(0.72 0.1 248);
+    --text-link-hover: oklch(0.8 0.09 248);
+
+    --border-subtle: oklch(1 0 0 / 0.08);
+    --border-default: oklch(1 0 0 / 0.14);
+    --border-strong: oklch(1 0 0 / 0.26);
+    --border-focus: oklch(0.68 0.12 248);
+
+    --accent: oklch(0.62 0.13 248);
+    --accent-hover: oklch(0.7 0.12 248);
+    --accent-active: oklch(0.76 0.1 248);
+    --accent-subtle: oklch(0.3 0.05 248);
+    --accent-subtle-border: oklch(0.38 0.07 248);
+    --accent-on: oklch(0.15 0.01 250);
+
+    --success: oklch(0.7 0.12 152);
+    --success-surface: oklch(0.28 0.045 152);
+    --success-border: oklch(0.36 0.06 152);
+    --warning: oklch(0.78 0.1 82);
+    --warning-icon: oklch(0.74 0.11 82);
+    --warning-surface: oklch(0.3 0.045 82);
+    --warning-border: oklch(0.38 0.06 82);
+    --danger: oklch(0.68 0.16 28);
+    --danger-hover: oklch(0.75 0.14 28);
+    --danger-surface: oklch(0.3 0.06 28);
+    --danger-border: oklch(0.38 0.09 28);
+    --info: oklch(0.68 0.11 248);
+    --info-surface: oklch(0.28 0.05 248);
+    --info-border: oklch(0.36 0.07 248);
+
+    --field-bg: oklch(0.22 0.008 70);
+    --field-border: oklch(1 0 0 / 0.16);
+    --field-border-hover: oklch(1 0 0 / 0.28);
+    --field-placeholder: oklch(0.58 0.008 76);
+    --field-disabled-bg: oklch(0.2 0.008 70);
+
+    --board-surface: oklch(0.63 0.058 70);
+    --board-surface-light: oklch(0.67 0.055 72);
+    --board-surface-edge: oklch(0.47 0.05 66);
+    --board-frame: oklch(0.38 0.04 64);
+    --board-line: oklch(0.2 0.022 60 / 0.88);
+    --board-line-edge: oklch(0.17 0.022 60 / 0.95);
+    --board-star: oklch(0.16 0.022 60 / 0.95);
+    --board-coord: oklch(0.24 0.02 60 / 0.92);
+    --board-hover: oklch(0.15 0.02 60 / 0.18);
+    --stone-white: oklch(0.94 0.004 90);
+    --stone-white-edge: oklch(0.74 0.008 85);
+    --stone-shadow: oklch(0.1 0.01 60 / 0.45);
+
+    --move-best: oklch(0.7 0.11 248);
+    --move-good: oklch(0.7 0.12 152);
+    --move-inaccuracy: oklch(0.76 0.1 82);
+    --move-mistake: oklch(0.7 0.12 48);
+    --move-blunder: oklch(0.68 0.16 28);
+    --move-best-surface: oklch(0.28 0.05 248);
+    --move-good-surface: oklch(0.28 0.045 152);
+    --move-inaccuracy-surface: oklch(0.3 0.045 82);
+    --move-mistake-surface: oklch(0.3 0.05 48);
+    --move-blunder-surface: oklch(0.3 0.06 28);
+
+    --winrate-black: oklch(0.34 0.012 265);
+    --winrate-white: oklch(0.86 0.006 85);
+    --winrate-divider: oklch(0.18 0.008 70);
+
+    --candidate-1: oklch(0.68 0.12 152 / 0.9);
+    --candidate-2: oklch(0.6 0.1 152 / 0.75);
+    --candidate-3: oklch(0.52 0.07 152 / 0.6);
+    --candidate-rest: oklch(0.45 0.04 152 / 0.45);
+
+    --chart-grid: oklch(1 0 0 / 0.08);
+    --chart-axis: oklch(1 0 0 / 0.16);
+
+    --series-1: #448bcb;
+    --series-2: #ca774a;
+    --series-3: #13a5b2;
+    --series-4: #b58a3a;
+    --series-5: #c4759c;
+    --series-6: #418d59;
+    --series-7: #2e97ca;
+    --series-8: #bb584d;
+
+    --seq-1: #104d7d;
+    --seq-2: #1d649e;
+    --seq-3: #317dbf;
+    --seq-4: #5897d2;
+    --seq-5: #7eb2e3;
+    --seq-6: #a6ccf0;
+
+    --div-neg-3: #e0a877;
+    --div-neg-2: #b8763f;
+    --div-neg-1: #7d4a24;
+    --div-mid: #565149;
+    --div-pos-1: #2b5c85;
+    --div-pos-2: #3d7fb5;
+    --div-pos-3: #8fb4d8;
+
+    --elevation-tint: 0 0 0;
+    --elevation-sm: 0 1px 3px 0 oklch(0 0 0 / 0.4), 0 1px 2px -1px oklch(0 0 0 / 0.3);
+    --elevation-md: 0 4px 12px -2px oklch(0 0 0 / 0.45), 0 2px 4px -2px oklch(0 0 0 / 0.3);
+    --elevation-lg: 0 12px 32px -8px oklch(0 0 0 / 0.6), 0 4px 8px -4px oklch(0 0 0 / 0.4);
+  }
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --surface-page: oklch(0.18 0.008 70);
+  --surface-raised: oklch(0.22 0.008 70);
+  --surface-sunken: oklch(0.15 0.008 70);
+  --surface-overlay: oklch(0.25 0.008 70);
+
+  --text-primary: oklch(0.94 0.004 85);
+  --text-strong: oklch(0.98 0.003 85);
+  --text-secondary: oklch(0.72 0.008 78);
+  --text-tertiary: oklch(0.6 0.008 76);
+  --text-inverse: oklch(0.18 0.008 70);
+  --text-link: oklch(0.72 0.1 248);
+  --text-link-hover: oklch(0.8 0.09 248);
+
+  --border-subtle: oklch(1 0 0 / 0.08);
+  --border-default: oklch(1 0 0 / 0.14);
+  --border-strong: oklch(1 0 0 / 0.26);
+  --border-focus: oklch(0.68 0.12 248);
+
+  --accent: oklch(0.62 0.13 248);
+  --accent-hover: oklch(0.7 0.12 248);
+  --accent-active: oklch(0.76 0.1 248);
+  --accent-subtle: oklch(0.3 0.05 248);
+  --accent-subtle-border: oklch(0.38 0.07 248);
+  --accent-on: oklch(0.15 0.01 250);
+
+  --success: oklch(0.7 0.12 152);
+  --success-surface: oklch(0.28 0.045 152);
+  --success-border: oklch(0.36 0.06 152);
+  --warning: oklch(0.78 0.1 82);
+  --warning-icon: oklch(0.74 0.11 82);
+  --warning-surface: oklch(0.3 0.045 82);
+  --warning-border: oklch(0.38 0.06 82);
+  --danger: oklch(0.68 0.16 28);
+  --danger-hover: oklch(0.75 0.14 28);
+  --danger-surface: oklch(0.3 0.06 28);
+  --danger-border: oklch(0.38 0.09 28);
+  --info: oklch(0.68 0.11 248);
+  --info-surface: oklch(0.28 0.05 248);
+  --info-border: oklch(0.36 0.07 248);
+
+  --field-bg: oklch(0.22 0.008 70);
+  --field-border: oklch(1 0 0 / 0.16);
+  --field-border-hover: oklch(1 0 0 / 0.28);
+  --field-placeholder: oklch(0.58 0.008 76);
+  --field-disabled-bg: oklch(0.2 0.008 70);
+
+  --board-surface: oklch(0.63 0.058 70);
+  --board-surface-light: oklch(0.67 0.055 72);
+  --board-surface-edge: oklch(0.47 0.05 66);
+  --board-frame: oklch(0.38 0.04 64);
+  --board-line: oklch(0.2 0.022 60 / 0.88);
+  --board-line-edge: oklch(0.17 0.022 60 / 0.95);
+  --board-star: oklch(0.16 0.022 60 / 0.95);
+  --board-coord: oklch(0.24 0.02 60 / 0.92);
+  --board-hover: oklch(0.15 0.02 60 / 0.18);
+  --stone-white: oklch(0.94 0.004 90);
+  --stone-white-edge: oklch(0.74 0.008 85);
+  --stone-shadow: oklch(0.1 0.01 60 / 0.45);
+
+  --move-best: oklch(0.7 0.11 248);
+  --move-good: oklch(0.7 0.12 152);
+  --move-inaccuracy: oklch(0.76 0.1 82);
+  --move-mistake: oklch(0.7 0.12 48);
+  --move-blunder: oklch(0.68 0.16 28);
+  --move-best-surface: oklch(0.28 0.05 248);
+  --move-good-surface: oklch(0.28 0.045 152);
+  --move-inaccuracy-surface: oklch(0.3 0.045 82);
+  --move-mistake-surface: oklch(0.3 0.05 48);
+  --move-blunder-surface: oklch(0.3 0.06 28);
+
+  --winrate-black: oklch(0.34 0.012 265);
+  --winrate-white: oklch(0.86 0.006 85);
+  --winrate-divider: oklch(0.18 0.008 70);
+
+  --candidate-1: oklch(0.68 0.12 152 / 0.9);
+  --candidate-2: oklch(0.6 0.1 152 / 0.75);
+  --candidate-3: oklch(0.52 0.07 152 / 0.6);
+  --candidate-rest: oklch(0.45 0.04 152 / 0.45);
+
+  --chart-grid: oklch(1 0 0 / 0.08);
+  --chart-axis: oklch(1 0 0 / 0.16);
+
+  --series-1: #448bcb;
+  --series-2: #ca774a;
+  --series-3: #13a5b2;
+  --series-4: #b58a3a;
+  --series-5: #c4759c;
+  --series-6: #418d59;
+  --series-7: #2e97ca;
+  --series-8: #bb584d;
+
+  --seq-1: #104d7d;
+  --seq-2: #1d649e;
+  --seq-3: #317dbf;
+  --seq-4: #5897d2;
+  --seq-5: #7eb2e3;
+  --seq-6: #a6ccf0;
+
+  --div-neg-3: #e0a877;
+  --div-neg-2: #b8763f;
+  --div-neg-1: #7d4a24;
+  --div-mid: #565149;
+  --div-pos-1: #2b5c85;
+  --div-pos-2: #3d7fb5;
+  --div-pos-3: #8fb4d8;
+
+  --elevation-tint: 0 0 0;
+  --elevation-sm: 0 1px 3px 0 oklch(0 0 0 / 0.4), 0 1px 2px -1px oklch(0 0 0 / 0.3);
+  --elevation-md: 0 4px 12px -2px oklch(0 0 0 / 0.45), 0 2px 4px -2px oklch(0 0 0 / 0.3);
+  --elevation-lg: 0 12px 32px -8px oklch(0 0 0 / 0.6), 0 4px 8px -4px oklch(0 0 0 / 0.4);
+}

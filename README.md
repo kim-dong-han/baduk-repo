@@ -109,7 +109,7 @@ Vercel 프로젝트에도 위 환경변수를 동일하게 등록해야 한다. 
 ## 문서
 
 - [`docs/architecture.md`](docs/architecture.md) — 레이어 구조와 코드 배치 규칙
-- [`docs/design-system.md`](docs/design-system.md) — 디자인 토큰과 바둑판 시각 언어
+- [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) — 디자인 토큰과 바둑판 시각 언어
 - [`docs/api-integration.md`](docs/api-integration.md) — 백엔드 연동 · 에러 처리 · 목 API
 - [`docs/testing.md`](docs/testing.md) — 테스트 전략
 - [`docs/adr/0001-package-versions.md`](docs/adr/0001-package-versions.md) — 패키지 버전 선택 근거
