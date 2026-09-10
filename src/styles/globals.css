@@ -1,0 +1,279 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* 다크 모드는 클래스 기반으로 제어한다. (html.dark) */
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------
+ * 1. Design Token (원시 값)
+ *    - 여기의 값만 바꾸면 서비스 전체 톤이 바뀐다.
+ *    - 컴포넌트에서는 원시 토큰을 직접 쓰지 않고, 2번의 의미 기반
+ *      (semantic) 토큰을 사용한다.
+ * ------------------------------------------------------------------ */
+:root {
+  /* 종이/먹 계열 뉴트럴 */
+  --paper-50: oklch(0.99 0.004 95);
+  --paper-100: oklch(0.972 0.007 92);
+  --paper-200: oklch(0.935 0.011 90);
+  --paper-300: oklch(0.878 0.014 88);
+  --ink-400: oklch(0.62 0.014 265);
+  --ink-500: oklch(0.52 0.016 265);
+  --ink-600: oklch(0.42 0.018 265);
+  --ink-700: oklch(0.32 0.02 265);
+  --ink-800: oklch(0.24 0.02 265);
+  --ink-900: oklch(0.17 0.018 265);
+  --ink-950: oklch(0.12 0.016 265);
+
+  /* 청자(celadon) 계열 - 서비스 포인트 컬러 */
+  --celadon-300: oklch(0.84 0.062 185);
+  --celadon-500: oklch(0.65 0.093 187);
+  --celadon-600: oklch(0.56 0.089 188);
+  --celadon-700: oklch(0.47 0.076 189);
+
+  /* 바둑판 목재 */
+  --kaya-100: oklch(0.925 0.038 82);
+  --kaya-300: oklch(0.865 0.061 78);
+  --kaya-500: oklch(0.812 0.077 74);
+  --kaya-700: oklch(0.66 0.072 68);
+
+  /* 분석 상태 신호색 */
+  --signal-blue: oklch(0.62 0.15 250);
+  --signal-green: oklch(0.68 0.145 152);
+  --signal-amber: oklch(0.76 0.14 78);
+  --signal-orange: oklch(0.68 0.16 45);
+  --signal-red: oklch(0.6 0.2 25);
+
+  --radius: 0.625rem;
+}
+
+/* ------------------------------------------------------------------
+ * 2. Semantic Token - Light
+ * ------------------------------------------------------------------ */
+:root {
+  --background: var(--paper-50);
+  --foreground: var(--ink-900);
+
+  --surface: oklch(1 0 0);
+  --surface-foreground: var(--ink-900);
+  --surface-muted: var(--paper-100);
+
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink-900);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink-900);
+
+  --primary: var(--ink-800);
+  --primary-foreground: var(--paper-50);
+  --secondary: var(--paper-200);
+  --secondary-foreground: var(--ink-800);
+  --muted: var(--paper-100);
+  --muted-foreground: var(--ink-500);
+  --accent: var(--celadon-600);
+  --accent-foreground: oklch(0.99 0 0);
+  --destructive: var(--signal-red);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.9 0.008 90);
+  --input: oklch(0.9 0.008 90);
+  --ring: var(--celadon-500);
+
+  /* --- 바둑판 --- */
+  --board-surface: var(--kaya-500);
+  --board-surface-edge: var(--kaya-700);
+  --board-grid: oklch(0.3 0.03 62 / 0.8);
+  --board-star: oklch(0.25 0.03 62 / 0.9);
+  --board-coord: oklch(0.38 0.03 62 / 0.85);
+  --board-shadow: oklch(0.2 0.02 62 / 0.25);
+
+  --stone-black: oklch(0.18 0.008 265);
+  --stone-black-edge: oklch(0.32 0.01 265);
+  --stone-white: oklch(0.975 0.004 95);
+  --stone-white-edge: oklch(0.82 0.008 90);
+  --stone-marker-on-black: oklch(0.98 0 0);
+  --stone-marker-on-white: oklch(0.2 0 0);
+
+  /* --- 분석 --- */
+  --move-brilliant: var(--signal-blue);
+  --move-good: var(--signal-green);
+  --move-inaccuracy: var(--signal-amber);
+  --move-mistake: var(--signal-orange);
+  --move-blunder: var(--signal-red);
+
+  --winrate-black: var(--ink-800);
+  --winrate-white: var(--paper-300);
+  --score-lead: var(--celadon-600);
+
+  /* AI 후보수 오버레이 */
+  --candidate-top: oklch(0.7 0.15 152 / 0.85);
+  --candidate-mid: oklch(0.78 0.13 95 / 0.8);
+  --candidate-low: oklch(0.72 0.06 250 / 0.7);
+
+  /* --- 차트 --- */
+  --chart-1: var(--celadon-600);
+  --chart-2: var(--signal-blue);
+  --chart-3: var(--signal-amber);
+  --chart-4: var(--signal-orange);
+  --chart-5: var(--ink-500);
+}
+
+/* ------------------------------------------------------------------
+ * 2-1. Semantic Token - Dark
+ * ------------------------------------------------------------------ */
+.dark {
+  --background: var(--ink-950);
+  --foreground: var(--paper-100);
+
+  --surface: var(--ink-900);
+  --surface-foreground: var(--paper-100);
+  --surface-muted: var(--ink-800);
+
+  --card: var(--ink-900);
+  --card-foreground: var(--paper-100);
+  --popover: var(--ink-900);
+  --popover-foreground: var(--paper-100);
+
+  --primary: var(--paper-100);
+  --primary-foreground: var(--ink-900);
+  --secondary: var(--ink-800);
+  --secondary-foreground: var(--paper-100);
+  --muted: var(--ink-800);
+  --muted-foreground: var(--ink-400);
+  --accent: var(--celadon-500);
+  --accent-foreground: var(--ink-950);
+  --destructive: oklch(0.66 0.19 25);
+  --destructive-foreground: oklch(0.14 0 0);
+
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: var(--celadon-500);
+
+  --board-surface: oklch(0.62 0.055 66);
+  --board-surface-edge: oklch(0.46 0.05 62);
+  --board-grid: oklch(0.18 0.02 62 / 0.85);
+  --board-star: oklch(0.15 0.02 62 / 0.95);
+  --board-coord: oklch(0.24 0.02 62 / 0.9);
+  --board-shadow: oklch(0 0 0 / 0.4);
+
+  --stone-white: oklch(0.94 0.004 95);
+  --stone-white-edge: oklch(0.76 0.008 90);
+
+  --winrate-black: var(--ink-700);
+  --winrate-white: var(--paper-200);
+
+  --chart-5: var(--ink-400);
+}
+
+/* ------------------------------------------------------------------
+ * 3. Tailwind theme 매핑
+ *    bg-board-surface, text-move-blunder 같은 유틸리티로 노출된다.
+ * ------------------------------------------------------------------ */
+@theme inline {
+  --font-sans:
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-surface-muted: var(--surface-muted);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-board-surface: var(--board-surface);
+  --color-board-surface-edge: var(--board-surface-edge);
+  --color-board-grid: var(--board-grid);
+  --color-board-star: var(--board-star);
+  --color-board-coord: var(--board-coord);
+  --color-stone-black: var(--stone-black);
+  --color-stone-white: var(--stone-white);
+
+  --color-move-brilliant: var(--move-brilliant);
+  --color-move-good: var(--move-good);
+  --color-move-inaccuracy: var(--move-inaccuracy);
+  --color-move-mistake: var(--move-mistake);
+  --color-move-blunder: var(--move-blunder);
+  --color-winrate-black: var(--winrate-black);
+  --color-winrate-white: var(--winrate-white);
+  --color-score-lead: var(--score-lead);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
+/* ------------------------------------------------------------------
+ * 4. Base
+ * ------------------------------------------------------------------ */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* 좌표, 수순, 승률 등 숫자는 항상 고정폭으로 읽힌다. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklch, var(--accent) 30%, transparent);
+  }
+
+  /* 바둑판 Canvas 는 CSS 로 흐려지면 안 된다. */
+  canvas {
+    display: block;
+    touch-action: manipulation;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

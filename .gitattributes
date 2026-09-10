@@ -1,0 +1,21 @@
+# 저장소에는 항상 LF 로 저장한다. (Windows/macOS/Vercel 빌드 간 diff 노이즈 방지)
+* text=auto eol=lf
+
+# Prettier 가 관리하는 파일은 LF 고정
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.css  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.mjs  text eol=lf
+
+# 자동 생성 파일 — GitHub 언어 통계와 diff 에서 제외
+package-lock.json         linguist-generated=true
+public/mockServiceWorker.js linguist-vendored=true
+
+# 바이너리
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary
+*.sgf text eol=lf
