@@ -126,7 +126,7 @@ Tailwind 기본 팔레트는 **통째로 지웠다**(`--color-*: initial`). `bg-
 - 굵기: 400 / 500 / 600 / 700 네 단계만
 - 숫자: 승률·집 차이·수순처럼 값이 바뀌는 숫자에는 `tabular` 를 붙인다. 안 붙이면 수를 넘길 때 숫자가 좌우로 떨린다.
 
-> 폰트는 지금 CDN 한 번의 외부 요청에 의존한다. 셀프 호스팅으로 옮기려면 woff2 를 `public/fonts` 에 두고 `next/font/local` 로 바꾼다. 폰트가 없어도 시스템 한글 폰트로 읽히게 폴백을 깔아 두었다.
+> 폰트는 지금 CDN 한 번의 외부 요청에 의존한다. 셀프 호스팅으로 옮기려면 woff2 를 `public/fonts` 에 두고 `index.html` 의 링크를 `@font-face` 로 바꾼다. 폰트가 없어도 시스템 한글 폰트로 읽히게 폴백을 깔아 두었다.
 
 ---
 
@@ -329,7 +329,7 @@ Lucide 를 쓴다(`lucide-react`).
 npx shadcn@latest add button dialog
 ```
 
-`components.json` 이 `src/components/ui/` 에 설치되도록 맞춰져 있다.
+`components.json` 이 `src/components/ui/` 에 설치되도록 맞춰져 있다(`rsc: false` — 서버 컴포넌트가 없는 SPA 다).
 
 `--color-background`, `--color-primary` 같은 **shadcn 호환 별칭**을 `globals.css` 에 남겨 두었다. 받아온 컴포넌트가 곧바로 컴파일되게 하려는 것이다. **새로 쓰는 코드에서는 이 이름을 쓰지 않는다.** `bg-page`, `text-ink`, `bg-accent` 를 쓴다.
 

@@ -4,7 +4,8 @@ import { cn } from '@/lib/utils';
 
 describe('cn', () => {
   it('falsy 값을 걸러낸다', () => {
-    expect(cn('a', false && 'b', undefined, 'c')).toBe('a c');
+    const isActive = false;
+    expect(cn('a', isActive && 'b', undefined, 'c')).toBe('a c');
   });
 
   it('Tailwind 클래스 충돌은 뒤에 온 것이 이긴다', () => {

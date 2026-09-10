@@ -1,12 +1,4 @@
-import type { Metadata } from 'next';
-
 import { ThemeToggle } from './theme-toggle';
-
-export const metadata: Metadata = {
-  title: '디자인 토큰',
-  description: '이 서비스가 쓰는 색·타이포·여백·바둑판·차트 토큰의 참조 시트.',
-  robots: { index: false, follow: false },
-};
 
 /* ---------------------------------------------------------------------------
  * 참조 시트용 조각들.
@@ -59,9 +51,13 @@ function Row({ children }: { children: React.ReactNode }) {
   return <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">{children}</div>;
 }
 
-export default function DesignSystemPage() {
+export function Component() {
   return (
     <main className="container-page py-12">
+      {/* React 19 가 title/meta 를 <head> 로 올려준다. */}
+      <title>디자인 토큰 · 바둑 AI 기보 분석</title>
+      <meta name="robots" content="noindex" />
+
       <header className="flex flex-wrap items-start justify-between gap-6 pb-10">
         <div className="max-w-prose">
           <p className="label-text">참조 시트</p>
@@ -458,3 +454,5 @@ export default function DesignSystemPage() {
     </main>
   );
 }
+
+Component.displayName = 'DesignSystemRoute';

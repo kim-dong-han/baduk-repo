@@ -1,11 +1,7 @@
-.next
-out
+dist
 coverage
 node_modules
 playwright-report
 test-results
 package-lock.json
 public/mockServiceWorker.js
-
-# next build 가 매번 다시 써서 prettier 와 충돌한다.
-tsconfig.json

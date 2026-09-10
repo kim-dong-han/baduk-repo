@@ -1,28 +1,32 @@
 import { z } from 'zod';
 
 /**
- * 클라이언트에서도 읽히는 공개 환경변수.
+ * 환경변수.
  *
- * Next.js 는 `process.env.NEXT_PUBLIC_*` 를 빌드 시점에 문자열로 치환한다.
- * 따라서 반드시 아래처럼 "정적으로" 참조해야 한다. (동적 키 접근 금지)
+ * Vite 는 `import.meta.env.VITE_*` 를 빌드 시점에 문자열로 치환한다.
+ * 반드시 아래처럼 정적으로 참조해야 한다. (동적 키 접근 금지)
+ *
+ * 이 프로젝트는 브라우저에서만 도는 SPA 다. 여기 들어온 값은 전부
+ * 번들에 포함되어 사용자에게 노출된다. **Secret 을 넣지 않는다.**
+ * 서버 전용 Secret 은 Spring Boot 백엔드가 갖는다.
  */
-const publicEnvSchema = z.object({
-  NEXT_PUBLIC_API_BASE_URL: z.url({ message: 'NEXT_PUBLIC_API_BASE_URL 은 URL 이어야 한다.' }),
-  NEXT_PUBLIC_APP_URL: z.url({ message: 'NEXT_PUBLIC_APP_URL 은 URL 이어야 한다.' }),
-  /** MSW 목 API 사용 여부. 로컬 개발/테스트에서만 켠다. */
-  NEXT_PUBLIC_ENABLE_API_MOCKING: z
+const envSchema = z.object({
+  VITE_API_BASE_URL: z.url({ message: 'VITE_API_BASE_URL 은 URL 이어야 한다.' }),
+  VITE_APP_URL: z.url({ message: 'VITE_APP_URL 은 URL 이어야 한다.' }),
+  /** MSW 목 API 사용 여부. 백엔드 없이 화면을 개발할 때만 켠다. */
+  VITE_ENABLE_API_MOCKING: z
     .enum(['true', 'false'])
     .default('false')
     .transform((value) => value === 'true'),
 });
 
-export type PublicEnv = z.infer<typeof publicEnvSchema>;
+export type Env = z.infer<typeof envSchema>;
 
-function readPublicEnv(): PublicEnv {
-  const parsed = publicEnvSchema.safeParse({
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    NEXT_PUBLIC_ENABLE_API_MOCKING: process.env.NEXT_PUBLIC_ENABLE_API_MOCKING,
+function readEnv(): Env {
+  const parsed = envSchema.safeParse({
+    VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+    VITE_APP_URL: import.meta.env.VITE_APP_URL,
+    VITE_ENABLE_API_MOCKING: import.meta.env.VITE_ENABLE_API_MOCKING,
   });
 
   if (!parsed.success) {
@@ -38,4 +42,4 @@ function readPublicEnv(): PublicEnv {
   return parsed.data;
 }
 
-export const env = readPublicEnv();
+export const env = readEnv();

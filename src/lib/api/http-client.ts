@@ -25,13 +25,13 @@ type RequestOptions<TSchema extends z.ZodType> = {
   /** 응답 본문 검증 스키마. 204 응답이면 생략한다. */
   schema?: TSchema;
   signal?: AbortSignal;
-  /** Next.js 서버 컴포넌트 캐시 옵션 */
   cache?: RequestCache;
-  next?: { revalidate?: number | false; tags?: string[] };
+  /** 인증이 붙으면 여기로 Authorization 헤더가 들어온다. */
+  credentials?: RequestCredentials;
 };
 
 function buildUrl(path: string, searchParams?: RequestOptions<z.ZodType>['searchParams']): string {
-  const url = new URL(path.startsWith('/') ? path : `/${path}`, env.NEXT_PUBLIC_API_BASE_URL);
+  const url = new URL(path.startsWith('/') ? path : `/${path}`, env.VITE_API_BASE_URL);
 
   if (searchParams) {
     for (const [key, value] of Object.entries(searchParams)) {
@@ -73,7 +73,7 @@ export async function apiRequest<TSchema extends z.ZodType>(
     schema,
     signal,
     cache,
-    next,
+    credentials,
   } = options;
 
   let response: Response;
@@ -82,7 +82,7 @@ export async function apiRequest<TSchema extends z.ZodType>(
       method,
       signal,
       cache,
-      next,
+      credentials,
       headers: {
         Accept: 'application/json',
         ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
@@ -115,7 +115,7 @@ export async function apiRequest<TSchema extends z.ZodType>(
     });
   }
 
-  return parsed.data as z.infer<TSchema>;
+  return parsed.data;
 }
 
 export const api = {

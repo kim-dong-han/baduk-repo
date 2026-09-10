@@ -1,11 +1,13 @@
 # 백엔드 연동
 
-백엔드는 기존 Spring Boot 서비스를 그대로 쓴다. 이 저장소에 백엔드 로직을 다시 구현하지 않는다. Next.js Route Handler 도 원칙적으로 만들지 않는다 — 만들어야 한다면 그 이유(서버 전용 Secret 이 필요한 프록시 등)를 PR 에 적는다.
+백엔드는 별도의 Spring Boot 서비스가 담당한다. 이 저장소에 백엔드 로직을 다시 구현하지 않는다.
+
+이 프론트엔드는 브라우저에서만 도는 SPA 다. 서버 사이드가 없으므로 **서버 전용 Secret 을 가질 수 없다.** 토큰·키가 필요한 일은 전부 백엔드가 한다.
 
 ## 레이어
 
 ```
-컴포넌트
+라우트 · 컴포넌트
    ↓ (훅만 호출)
 features/<feature>/hooks     TanStack Query / Mutation
    ↓
@@ -16,7 +18,7 @@ lib/api/http-client          fetch · URL 조립 · 에러 변환 · 스키마 �
 Spring Boot
 ```
 
-`fetch` 는 `lib/api/http-client.ts` 에만 존재한다. ESLint 가 `src/app`, `src/components` 에서의 직접 호출을 막는다.
+`fetch` 는 `lib/api/http-client.ts` 에만 존재한다. ESLint 가 `src/routes`, `src/components` 에서의 직접 호출을 막는다.
 
 ## 작성 예 (실제 스키마가 정해지면 이 형태로)
 
@@ -102,11 +104,11 @@ KataGo 분석은 즉시 끝나지 않는다. 백엔드가 어떤 방식을 제�
 
 ```bash
 # .env.local
-NEXT_PUBLIC_ENABLE_API_MOCKING=true
+VITE_ENABLE_API_MOCKING=true
 ```
 
 - 핸들러: `src/mocks/handlers/` (도메인별 파일로 나누고 `index.ts` 에서 합친다)
-- 브라우저: `src/mocks/browser.ts` — `providers.tsx` 가 워커 준비 후 렌더한다
+- 브라우저: `src/mocks/browser.ts` — `main.tsx` 가 워커를 띄운 뒤에 렌더한다
 - 테스트: `src/mocks/server.ts` — `tests/setup.ts` 가 항상 켜고, 등록되지 않은 요청은 실패시킨다
 - `public/mockServiceWorker.js` 는 `npx msw init public --save` 로 생성된 파일이다. 직접 수정하지 않는다. MSW 를 올리면 다시 실행한다.
 

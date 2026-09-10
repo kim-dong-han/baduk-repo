@@ -5,7 +5,9 @@
 기존 프로젝트는 하나의 거대한 JS 파일과 전역 DOM 조작에 기능이 뭉쳐 있었다. 이 저장소는 그 구조를 옮기지 않는다. 대신 **기능 단위 수직 슬라이스(feature slice)** 로 나누고, 레이어 간 의존 방향을 한쪽으로만 흐르게 고정한다.
 
 ```
-app (라우팅/조립)
+app (조립: providers · router)
+  ↓
+routes (화면 = 라우트 컴포넌트)
   ↓
 features (기능 단위: 화면 · 훅 · API · 도메인 모델)
   ↓
@@ -20,15 +22,23 @@ lib (프레임워크 경계: HTTP · 환경변수 · 유틸)
 
 ## 각 디렉터리의 책임
 
+### `src/main.tsx`
+
+진입점. 목 API 를 먼저 띄우고 나서 렌더한다. 워커가 준비되기 전에 렌더하면 첫 요청이 목을 통과하지 못한다.
+
 ### `src/app`
 
-라우팅과 조립만 한다. 로직을 담지 않는다.
+앱을 조립하기만 한다. 로직을 담지 않는다.
 
-- `layout.tsx` — html 셸, metadata, Provider 주입
-- `providers.tsx` — 전역 Provider 조립 (TanStack Query, MSW 부팅)
-- `page.tsx` / `<route>/page.tsx` — feature 컴포넌트를 배치하는 얇은 껍데기
+- `app.tsx` — Provider 와 라우터를 붙인다
+- `providers.tsx` — 전역 Provider 조립 (TanStack Query)
+- `router.tsx` — 라우트 정의. 화면은 전부 `lazy` 로 나눠 첫 진입 번들에서 뺀다
 
-page 파일이 30~50줄을 넘기면 대개 feature 로 내려보내야 할 로직이 올라온 것이다.
+### `src/routes`
+
+라우트 컴포넌트. React Router 의 data router 규약을 따라 `Component` 를 named export 한다(필요해지면 `loader`, `action`, `ErrorBoundary` 도 같은 파일에서 내보낸다).
+
+화면 파일이 30~50줄을 넘기면 대개 feature 로 내려보내야 할 로직이 올라온 것이다. 라우트 파일은 feature 컴포넌트를 배치하는 얇은 껍데기로 둔다.
 
 ### `src/features/<feature>`
 
@@ -72,9 +82,9 @@ features/game-review/
 
 - `lib/api/http-client.ts` — 백엔드로 나가는 **유일한** 출구. `fetch` 는 여기에만 있다.
 - `lib/api/api-error.ts` — 실패를 표현하는 단일 타입 `ApiError`.
-- `lib/api/query-client.ts` — QueryClient 기본 정책 (서버/브라우저 분리).
-- `lib/config/env.ts` — 공개 환경변수, Zod 검증.
-- `lib/config/server-env.ts` — 서버 전용 Secret, `import 'server-only'` 로 보호.
+- `lib/api/query-client.ts` — QueryClient 기본 정책. SPA 이므로 인스턴스는 하나다.
+- `lib/config/env.ts` — 환경변수, Zod 검증. SPA 이므로 여기 값은 전부 공개된다.
+- `lib/design/tokens.ts` — Canvas·차트가 디자인 토큰을 읽는 통로.
 - `lib/utils.ts` — `cn()` 등 진짜 범용 유틸만.
 
 ### `src/stores`
@@ -90,19 +100,18 @@ Zustand store 는 **여러 화면이 공유해야 하는 클라이언트 상태*
 
 ### `src/mocks`
 
-MSW 핸들러. 백엔드가 준비되기 전에 화면을 먼저 만들 수 있게 한다. `NEXT_PUBLIC_ENABLE_API_MOCKING=true` 일 때 브라우저에서, 테스트에서는 `tests/setup.ts` 가 항상 켠다.
+MSW 핸들러. 백엔드가 준비되기 전에 화면을 먼저 만들 수 있게 한다. `VITE_ENABLE_API_MOCKING=true` 일 때 브라우저에서, 테스트에서는 `tests/setup.ts` 가 항상 켠다.
 
 ---
 
 ## 데이터 흐름
 
 ```
-서버 컴포넌트 ─┐
-               ├─→ features/*/api (fetch + Zod)  ─→  lib/api/http-client  ─→  Spring Boot
-클라이언트 훅 ─┘        ↑
-                  features/*/hooks (TanStack Query)
-                        ↓
-                  features/*/components  ←  stores (화면 상태)
+features/*/api (Zod 스키마)  ─→  lib/api/http-client  ─→  Spring Boot
+        ↑
+features/*/hooks (TanStack Query)
+        ↓
+features/*/components  ←  stores (화면 상태)
 ```
 
 - **서버 상태**(기보, 분석 결과, 목록)는 TanStack Query 가 소유한다. 이것을 Zustand 로 복사하지 않는다.

@@ -23,13 +23,16 @@ Playwright 는 브라우저 바이너리를 따로 받아야 한다. CI 에서�
 
 ## 설정
 
-- `vitest.config.ts` — jsdom 환경, `tests/setup.ts` 자동 로드, `@/` alias 는 tsconfig paths 를 그대로 쓴다. 테스트용 `NEXT_PUBLIC_*` 값이 여기에 주입되어 있으므로 테스트가 `.env.local` 에 의존하지 않는다.
+- `vite.config.ts` 의 `test` 키 — jsdom 환경, `tests/setup.ts` 자동 로드, `@/` alias 는 tsconfig paths 를 그대로 쓴다. 테스트용 `VITE_*` 값이 여기에 주입되어 있으므로 테스트가 `.env.local` 에 의존하지 않는다. 앱 설정과 테스트 설정을 한 파일에 두어 별칭·플러그인이 어긋나지 않게 한다.
 - `tests/setup.ts` — jest-dom matcher, Testing Library 자동 cleanup, MSW 서버 기동. **핸들러가 없는 요청은 실패한다**(`onUnhandledRequest: 'error'`). 실수로 실제 백엔드를 때리는 테스트를 막기 위해서다.
-- `playwright.config.ts` — `npm run dev` 를 자동 기동하고, Desktop Chrome 과 Pixel 7(터치) 두 프로젝트로 돈다. 바둑판은 터치 환경에서도 동작해야 한다.
+- `playwright.config.ts` — `npm run dev`(5173)를 자동 기동하고, Desktop Chrome 과 Pixel 7(터치) 두 프로젝트로 돈다. 바둑판은 터치 환경에서도 동작해야 한다.
+
+SPA 이므로 **딥링크 새로고침**을 반드시 E2E 로 지킨다. `vercel.json` 의 fallback 이 깨지면 `/design-system` 같은 주소가 프로덕션에서만 404 가 나고 로컬에서는 멀쩡하다.
 
 ## 테스트 파일 위치
 
 - 도메인 로직 옆에 두는 것을 기본으로 한다: `features/game-board/model/liberties.test.ts`
+- 접근성은 lint 로 잡지 않는다(`eslint-plugin-jsx-a11y` 가 ESLint 10 을 지원하지 않는다). 대신 화면이 생기면 `@axe-core/playwright` 를 E2E 에 붙인다.
 - 여러 모듈에 걸치는 것은 `tests/unit/` 에 둔다.
 - E2E 는 `tests/e2e/*.spec.ts`.
 
