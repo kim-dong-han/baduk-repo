@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 
-export function Component() {
+export function NotFoundPage() {
   return (
     <main className="container-page flex min-h-dvh max-w-prose flex-col justify-center gap-4">
       <p className="label-text">404</p>
@@ -18,4 +18,6 @@ export function Component() {
   );
 }
 
-Component.displayName = 'NotFoundRoute';
+// React Router 는 lazy 라우트에서 `Component` 를 찾는다.
+// 이름은 COMPONENT_RULES.md 대로 두고 별칭으로 규약을 맞춘다.
+export { NotFoundPage as Component };

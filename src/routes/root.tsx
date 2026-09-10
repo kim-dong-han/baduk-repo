@@ -6,7 +6,7 @@ import { Outlet, ScrollRestoration, isRouteErrorResponse, useRouteError } from '
  * 헤더·네비게이션은 아직 없다. PROJECT.md 의 순서대로
  * Design System 다음 단계인 Layout 에서 만든다.
  */
-export function Component() {
+export function RootLayout() {
   return (
     <>
       <Outlet />
@@ -16,7 +16,9 @@ export function Component() {
   );
 }
 
-Component.displayName = 'RootRoute';
+// React Router 는 lazy 라우트에서 `Component` 를 찾는다.
+// 이름은 COMPONENT_RULES.md 대로 두고 별칭으로 규약을 맞춘다.
+export { RootLayout as Component };
 
 /** 라우트 트리 어디서 터져도 여기로 온다. */
 export function ErrorBoundary() {

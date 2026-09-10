@@ -4,7 +4,7 @@ import { Link } from 'react-router';
  * 초기 확인용 임시 화면.
  * 실제 랜딩은 Pages 단계에서 만든다.
  */
-export function Component() {
+export function HomePage() {
   return (
     <main className="container-page flex min-h-dvh max-w-prose flex-col justify-center gap-6">
       <p className="label-text">바둑 AI 기보 분석</p>
@@ -24,4 +24,6 @@ export function Component() {
   );
 }
 
-Component.displayName = 'HomeRoute';
+// React Router 는 lazy 라우트에서 `Component` 를 찾는다.
+// 이름은 COMPONENT_RULES.md 대로 두고 별칭으로 규약을 맞춘다.
+export { HomePage as Component };

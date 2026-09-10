@@ -267,16 +267,17 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  /* 크기 — 13px 미만은 만들지 않는다. */
-  --font-size-caption: 0.8125rem; /* 13px 캡션·좌표·단위 */
-  --font-size-small: 0.875rem; /* 14px 보조 정보 */
-  --font-size-body: 1rem; /* 16px 본문 기본 */
+  /* 크기 — 13px 미만은 만들지 않는다.
+   * 정보를 더 넣으려고 글자를 줄이지 않는다. 줄여야 한다면 정보를 줄인다. */
+  --font-size-caption: 0.8125rem; /* 13px 작은 메타 정보 (하한) */
+  --font-size-small: 0.875rem; /* 14px 보조 설명 */
+  --font-size-body: 1rem; /* 16px 본문 기본 (하한) */
   --font-size-body-lg: 1.0625rem; /* 17px 상세 본문 */
-  --font-size-title-sm: 1.25rem; /* 20px 카드/블록 제목 */
-  --font-size-title: 1.5rem; /* 24px 섹션 제목 */
-  --font-size-title-lg: 1.875rem; /* 30px 페이지 제목 */
-  --font-size-display-sm: 2.25rem; /* 36px */
-  --font-size-display: 3rem; /* 48px 히어로 */
+  --font-size-subtitle: 1.25rem; /* 20px 블록 제목 */
+  --font-size-section: 1.5rem; /* 24px 섹션 제목 */
+  --font-size-section-lg: 1.75rem; /* 28px 섹션 제목 (상한) */
+  --font-size-page: 2rem; /* 32px 페이지 제목 */
+  --font-size-page-lg: 2.5rem; /* 40px 페이지 제목 (상한) */
 
   /* 행간 — 한글은 라틴보다 넉넉해야 읽힌다. */
   --line-height-tight: 1.2;
@@ -290,13 +291,12 @@
   --letter-spacing-label: 0.02em;
 
   /* =========================================================================
-   * Spacing — 4px 배수. 이 사다리 밖의 값을 새로 만들지 않는다.
+   * Spacing — 4px 기반. 이 사다리 밖의 값을 새로 만들지 않는다.
    * ======================================================================= */
   --space-1: 0.25rem; /*  4px */
   --space-2: 0.5rem; /*  8px */
   --space-3: 0.75rem; /* 12px */
   --space-4: 1rem; /* 16px */
-  --space-5: 1.25rem; /* 20px */
   --space-6: 1.5rem; /* 24px */
   --space-8: 2rem; /* 32px */
   --space-10: 2.5rem; /* 40px */
@@ -305,13 +305,14 @@
   --space-20: 5rem; /* 80px */
 
   /* =========================================================================
-   * Radius — 8~16px. 20px 이상으로 둥글리지 않는다.
+   * Radius — 작은 요소 8 / 일반 UI 12 / 큰 영역 16~20.
+   * 모든 요소를 둥글게 만들지 않는다. 표, 목록, 구분선은 각지게 둔다.
    * ======================================================================= */
-  --corner-xs: 4px; /* 태그, 작은 표식 */
-  --corner-sm: 6px; /* 배지, 인풋 내부 요소 */
-  --corner-md: 8px; /* 기본: 버튼, 입력, 작은 패널 */
-  --corner-lg: 12px; /* 패널, 목록 블록 */
-  --corner-xl: 16px; /* 큰 패널, 모달, 바둑판 프레임 */
+  --corner-xs: 4px; /* 인라인 표식, 포커스 링 */
+  --corner-sm: 8px; /* 작은 요소: 배지, 태그, 칩 */
+  --corner-md: 12px; /* 일반 UI: 버튼, 입력, 패널 (기본) */
+  --corner-lg: 16px; /* 큰 영역 */
+  --corner-xl: 20px; /* 큰 영역 상한: 모달, 바둑판 프레임 */
   --corner-round: 9999px; /* 아바타, 점 표시에만 */
 
   /* =========================================================================

@@ -145,33 +145,33 @@
   --color-input: var(--field-border);
   --color-ring: var(--border-focus);
 
-  /* --- Typography ---------------------------------------------------------
-   * 13px 미만과 48px 초과는 아예 만들지 않는다. */
+  /* --- Typography --------------------------------------------------------- */
   --font-sans: var(--font-family-sans);
   --font-mono: var(--font-family-mono);
 
   --text-*: initial;
-  --text-xs: var(--font-size-caption);
+  /* 13px 미만도, 40px 초과도 만들지 않는다. */
+  --text-xs: var(--font-size-caption); /* 13 작은 메타 */
   --text-xs--line-height: var(--line-height-snug);
-  --text-sm: var(--font-size-small);
+  --text-sm: var(--font-size-small); /* 14 보조 설명 */
   --text-sm--line-height: 1.6;
-  --text-base: var(--font-size-body);
+  --text-base: var(--font-size-body); /* 16 본문 */
   --text-base--line-height: var(--line-height-body);
-  --text-lg: var(--font-size-body-lg);
+  --text-lg: var(--font-size-body-lg); /* 17 상세 본문 */
   --text-lg--line-height: var(--line-height-body);
-  --text-xl: var(--font-size-title-sm);
+  --text-xl: var(--font-size-subtitle); /* 20 블록 제목 */
   --text-xl--line-height: var(--line-height-snug);
   --text-xl--letter-spacing: var(--letter-spacing-heading);
-  --text-2xl: var(--font-size-title);
+  --text-2xl: var(--font-size-section); /* 24 섹션 제목 */
   --text-2xl--line-height: var(--line-height-heading);
   --text-2xl--letter-spacing: var(--letter-spacing-heading);
-  --text-3xl: var(--font-size-title-lg);
+  --text-3xl: var(--font-size-section-lg); /* 28 섹션 제목 상한 */
   --text-3xl--line-height: var(--line-height-heading);
   --text-3xl--letter-spacing: var(--letter-spacing-heading);
-  --text-4xl: var(--font-size-display-sm);
-  --text-4xl--line-height: var(--line-height-tight);
+  --text-4xl: var(--font-size-page); /* 32 페이지 제목 */
+  --text-4xl--line-height: 1.3;
   --text-4xl--letter-spacing: var(--letter-spacing-display);
-  --text-5xl: var(--font-size-display);
+  --text-5xl: var(--font-size-page-lg); /* 40 페이지 제목 상한 */
   --text-5xl--line-height: var(--line-height-tight);
   --text-5xl--letter-spacing: var(--letter-spacing-display);
 
@@ -187,7 +187,7 @@
   /* --- Spacing — 4px 배수 사다리 ------------------------------------------ */
   --spacing: 0.25rem;
 
-  /* --- Radius — 16px 을 넘는 값은 제공하지 않는다. ----------------------- */
+  /* --- Radius — 작은 요소 8 / 일반 UI 12 / 큰 영역 16~20 ----------------- */
   --radius-*: initial;
   --radius-xs: var(--corner-xs);
   --radius-sm: var(--corner-sm);

@@ -51,7 +51,7 @@ function Row({ children }: { children: React.ReactNode }) {
   return <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">{children}</div>;
 }
 
-export function Component() {
+export function DesignSystemPage() {
   return (
     <main className="container-page py-12">
       {/* React 19 가 title/meta 를 <head> 로 올려준다. */}
@@ -126,19 +126,19 @@ export function Component() {
         >
           <div className="flex flex-col gap-6">
             {[
-              ['text-5xl', '48px / 1.2', '흑이 우세합니다'],
-              ['text-4xl', '36px / 1.2', '흑이 우세합니다'],
-              ['text-3xl', '30px / 1.35', '기보 분석 결과'],
-              ['text-2xl', '24px / 1.35', '수순별 승률 변화'],
-              ['text-xl', '20px / 1.55', '이 수에서 승률이 크게 흔들렸다'],
-              ['text-lg', '17px / 1.7', '상세 설명에 쓰는 조금 큰 본문이다'],
-              ['text-base', '16px / 1.7', '본문 기본 크기다. 모든 설명은 여기서 시작한다'],
-              ['text-sm', '14px / 1.6', '보조 정보. 메타데이터나 도움말에 쓴다'],
-              ['text-xs', '13px / 1.55', '캡션과 좌표. 이보다 작은 글자는 만들지 않는다'],
+              ['text-5xl', '40px · 페이지 제목', '흑이 우세합니다'],
+              ['text-4xl', '32px · 페이지 제목', '기보 분석 결과'],
+              ['text-3xl', '28px · 섹션 제목', '수순별 승률 변화'],
+              ['text-2xl', '24px · 섹션 제목', '이 수에서 승률이 흔들렸다'],
+              ['text-xl', '20px · 블록 제목', '실수로 기록된 수'],
+              ['text-lg', '17px · 상세 본문', '상세 설명에 쓰는 조금 큰 본문이다'],
+              ['text-base', '16px · 본문', '본문 기본 크기다. 모든 설명은 여기서 시작한다'],
+              ['text-sm', '14px · 보조 설명', '보조 정보. 메타데이터나 도움말에 쓴다'],
+              ['text-xs', '13px · 작은 메타', '캡션과 좌표. 이보다 작은 글자는 만들지 않는다'],
             ].map(([cls, spec, sample]) => (
               <div key={cls} className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
                 <span className="w-24 shrink-0 font-mono text-xs text-ink-faint">{cls}</span>
-                <span className="w-24 shrink-0 font-mono tabular text-xs text-ink-faint">
+                <span className="w-36 shrink-0 font-mono tabular text-xs text-ink-faint">
                   {spec}
                 </span>
                 <span className={cls}>{sample}</span>
@@ -165,7 +165,6 @@ export function Component() {
               ['2', 8],
               ['3', 12],
               ['4', 16],
-              ['5', 20],
               ['6', 24],
               ['8', 32],
               ['10', 40],
@@ -191,15 +190,15 @@ export function Component() {
         <div className="grid gap-12 lg:grid-cols-2">
           <Section
             title="모서리"
-            note="8~16px 범위를 쓴다. 그보다 더 둥글게 만들지 않는다. 둥글수록 친근해 보이지만, 정보가 많은 화면에서는 경계가 흐려진다."
+            note="작은 요소 8px, 일반 UI 12px, 큰 영역 16~20px. 모든 요소를 둥글게 만들지 않는다. 표·목록·구분선은 각지게 둔다."
           >
             <div className="flex flex-wrap gap-4">
               {[
-                ['rounded-xs', '4px'],
-                ['rounded-sm', '6px'],
-                ['rounded-md', '8px'],
-                ['rounded-lg', '12px'],
-                ['rounded-xl', '16px'],
+                ['rounded-xs', '4px · 표식'],
+                ['rounded-sm', '8px · 작은 요소'],
+                ['rounded-md', '12px · 일반 UI'],
+                ['rounded-lg', '16px · 큰 영역'],
+                ['rounded-xl', '20px · 큰 영역'],
               ].map(([cls, px]) => (
                 <div key={cls} className="flex flex-col items-center gap-2">
                   <div className={`size-16 border border-line bg-sunken ${cls}`} />
@@ -211,7 +210,7 @@ export function Component() {
 
           <Section
             title="그림자"
-            note="떠 있어야 하는 것에만 쓴다. 검정이 아니라 따뜻한 갈색을 깔아 종이 위 그림자처럼 보이게 한다."
+            note="그림자는 최소화한다. 위계는 경계선·배경 대비·여백으로 먼저 만들고, 정말 떠 있어야 하는 것에만 그림자를 쓴다."
           >
             <div className="flex flex-wrap gap-4">
               {[
@@ -455,4 +454,6 @@ export function Component() {
   );
 }
 
-Component.displayName = 'DesignSystemRoute';
+// React Router 는 lazy 라우트에서 `Component` 를 찾는다.
+// 이름은 COMPONENT_RULES.md 대로 두고 별칭으로 규약을 맞춘다.
+export { DesignSystemPage as Component };

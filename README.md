@@ -124,6 +124,7 @@ Vercel 프로젝트에도 위 환경변수를 등록해야 한다. `VITE_ENABLE_
 - [`PROJECT.md`](PROJECT.md) — 프로젝트 원칙과 개발 순서
 - [`docs/architecture.md`](docs/architecture.md) — 레이어 구조와 코드 배치 규칙
 - [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) — 디자인 토큰과 바둑판 시각 언어
+- [`docs/COMPONENT_RULES.md`](docs/COMPONENT_RULES.md) — 컴포넌트 분리 기준과 Page 구조
 - [`docs/api-integration.md`](docs/api-integration.md) — 백엔드 연동 · 에러 처리 · 목 API
 - [`docs/testing.md`](docs/testing.md) — 테스트 전략
 - [`docs/adr/`](docs/adr) — 기술 선택 기록
