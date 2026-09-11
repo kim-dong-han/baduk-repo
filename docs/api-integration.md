@@ -23,7 +23,7 @@ Spring Boot
 ## 작성 예 (실제 스키마가 정해지면 이 형태로)
 
 ```ts
-// features/game-review/api/get-analysis.ts
+// features/analysis/api/get-analysis.ts
 import { z } from 'zod';
 import { api } from '@/lib/api';
 
@@ -51,18 +51,18 @@ export function getGameAnalysis(gameId: string, signal?: AbortSignal) {
 ```
 
 ```ts
-// features/game-review/hooks/use-game-analysis.ts
+// features/analysis/hooks/use-game-analysis.ts
 import { useQuery } from '@tanstack/react-query';
 import { getGameAnalysis } from '../api/get-analysis';
 
-export const gameReviewKeys = {
-  all: ['game-review'] as const,
-  analysis: (gameId: string) => [...gameReviewKeys.all, 'analysis', gameId] as const,
+export const analysisKeys = {
+  all: ['analysis'] as const,
+  byGame: (gameId: string) => [...analysisKeys.all, 'game', gameId] as const,
 };
 
 export function useGameAnalysis(gameId: string) {
   return useQuery({
-    queryKey: gameReviewKeys.analysis(gameId),
+    queryKey: analysisKeys.byGame(gameId),
     queryFn: ({ signal }) => getGameAnalysis(gameId, signal),
   });
 }

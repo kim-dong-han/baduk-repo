@@ -62,10 +62,12 @@ src/
 ├─ main.tsx     진입점 (목 API 기동 → 렌더)
 ├─ app/         앱 조립: app.tsx · providers.tsx · router.tsx
 ├─ routes/      라우트 컴포넌트 (화면)
-├─ components/  도메인에 종속되지 않는 재사용 UI
-│  ├─ ui/         shadcn primitive 가 설치되는 곳
-│  └─ layout/     헤더 · 셸 등 레이아웃 조각
-├─ features/    기능 단위 수직 슬라이스 (api · hooks · components · model)
+├─ components/  여러 기능이 재사용하는 UI
+│  ├─ ui/         기본 요소 (shadcn primitive 포함)
+│  ├─ layout/     헤더 · 네비게이션 · 페이지 셸
+│  ├─ board/      바둑판 (렌더링 · 좌표 · 입력)
+│  └─ chart/      데이터 시각화
+├─ features/    특정 기능의 UI + 로직: auth · game · analysis · gallery · notes
 ├─ hooks/       여러 feature 가 공유하는 훅
 ├─ lib/
 │  ├─ api/        HTTP 클라이언트 · 에러 타입 · QueryClient

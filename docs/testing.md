@@ -31,7 +31,7 @@ SPA 이므로 **딥링크 새로고침**을 반드시 E2E 로 지킨다. `vercel
 
 ## 테스트 파일 위치
 
-- 도메인 로직 옆에 두는 것을 기본으로 한다: `features/game-board/model/liberties.test.ts`
+- 도메인 로직 옆에 두는 것을 기본으로 한다: `features/game/model/liberties.test.ts`, `components/board/coordinate-system.test.ts`
 - 접근성은 lint 로 잡지 않는다(`eslint-plugin-jsx-a11y` 가 ESLint 10 을 지원하지 않는다). 대신 화면이 생기면 `@axe-core/playwright` 를 E2E 에 붙인다.
 - 여러 모듈에 걸치는 것은 `tests/unit/` 에 둔다.
 - E2E 는 `tests/e2e/*.spec.ts`.

@@ -42,20 +42,21 @@ lib (프레임워크 경계: HTTP · 환경변수 · 유틸)
 
 ### `src/features/<feature>`
 
-하나의 기능이 필요로 하는 것을 한 폴더에 모은다. 예상되는 슬라이스:
+특정 기능에 묶인 UI 와 로직을 한 폴더에 모은다.
 
 ```
 features/
-├─ game-upload/     SGF 업로드 · 검증 · 분석 요청
-├─ game-board/      바둑판 렌더링(Canvas) · 착수 표시 · 오버레이
-├─ game-review/     수순 이동 · 분석 결과 패널 · 승률 그래프
-└─ game-library/    내 기보 목록 · 검색
+├─ auth/        로그인 · 회원가입 · 세션
+├─ game/        기보 업로드 · SGF 파싱 · 수순 · 바둑 규칙
+├─ analysis/    AI 분석 요청 · 결과 · 후보수
+├─ gallery/     기보 목록 · 검색
+└─ notes/       수순 메모 · 학습 노트
 ```
 
 각 슬라이스 내부:
 
 ```
-features/game-review/
+features/analysis/
 ├─ api/          백엔드 호출 함수 + 응답 Zod 스키마
 ├─ hooks/        TanStack Query / Zustand 를 감싼 훅
 ├─ components/   이 기능에서만 쓰는 UI
@@ -71,12 +72,16 @@ features/game-review/
 
 ### `src/components`
 
-도메인을 모르는 재사용 UI만 둔다.
+여러 기능이 재사용하는 UI 를 둔다.
 
-- `ui/` — shadcn/ui primitive 가 설치되는 위치. 설치 후 외형은 우리 토큰으로 교체한다.
-- `layout/` — 헤더, 사이드바, 페이지 셸 등.
+- `ui/` — 버튼·입력·다이얼로그 같은 기본 요소. shadcn/ui primitive 도 여기 설치하고 외형은 우리 토큰으로 교체한다.
+- `layout/` — 헤더, 네비게이션, 페이지 셸.
+- `board/` — 바둑판. 렌더링·좌표 변환·사용자 입력만 책임진다.
+- `chart/` — 승률 그래프 등 데이터 시각화.
 
-"바둑" 이라는 단어가 props 에 등장하면 그 컴포넌트는 `features` 로 가야 한다.
+바둑판과 차트는 서비스의 핵심이지만 분석·갤러리·노트가 함께 쓰므로 `components/` 에 둔다. 대신 **`components/` 는 `features/` 나 store 를 import 하지 않는다.** 필요한 값은 전부 props 로 받는다.
+
+무엇을 어디에 둘지와 Board 의 내부 구조는 [`COMPONENT_RULES.md`](COMPONENT_RULES.md) 에 있다.
 
 ### `src/lib`
 
@@ -122,10 +127,10 @@ features/*/components  ←  stores (화면 상태)
 
 ## 바둑판을 Canvas 로 그리는 이유
 
-19×19 = 361 교차점에 돌·수순·AI 후보수·영향력 오버레이가 겹친다. DOM 으로 만들면 노드가 1,000개를 넘고, 수순 이동마다 리렌더가 발생한다.
+바둑판은 `components/board/` 에 둔다. 19×19 = 361 교차점에 돌·수순·AI 후보수·영향력 오버레이가 겹친다. DOM 으로 만들면 노드가 1,000개를 넘고, 수순 이동마다 리렌더가 발생한다.
 
 - 판/격자/좌표: 크기가 바뀔 때만 다시 그린다.
 - 돌과 오버레이: 수순이 바뀔 때만 다시 그린다.
 - 마우스 오버 하이라이트: 별도 레이어에 그려 나머지를 건드리지 않는다.
 
-접근성은 Canvas 옆에 시각적으로 숨긴 텍스트(현재 수순, 좌표, 승률)를 두고 키보드 조작을 지원해 확보한다. 이 부분은 구현 시점에 별도 문서로 정리한다.
+접근성은 Canvas 옆에 시각적으로 숨긴 텍스트(현재 수순, 좌표, 승률)를 두고 키보드 조작을 지원해 확보한다. Board 의 책임 범위와 내부 구조는 [`COMPONENT_RULES.md` 8절](COMPONENT_RULES.md#8-board-architecture) 을 따른다.
