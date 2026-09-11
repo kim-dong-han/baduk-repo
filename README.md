@@ -129,4 +129,5 @@ Vercel 프로젝트에도 위 환경변수를 등록해야 한다. `VITE_ENABLE_
 - [`docs/COMPONENT_RULES.md`](docs/COMPONENT_RULES.md) — 컴포넌트 분리 기준과 Page 구조
 - [`docs/api-integration.md`](docs/api-integration.md) — 백엔드 연동 · 에러 처리 · 목 API
 - [`docs/testing.md`](docs/testing.md) — 테스트 전략
+- [`docs/LEGACY_FEATURES.md`](docs/LEGACY_FEATURES.md) — 기존 서비스 기능 분석 (이관 명세)
 - [`docs/adr/`](docs/adr) — 기술 선택 기록
