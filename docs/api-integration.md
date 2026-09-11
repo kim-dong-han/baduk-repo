@@ -52,7 +52,6 @@ export function getGameAnalysis(gameId: string, signal?: AbortSignal) {
 
 ```ts
 // features/game-review/hooks/use-game-analysis.ts
-'use client';
 import { useQuery } from '@tanstack/react-query';
 import { getGameAnalysis } from '../api/get-analysis';
 
