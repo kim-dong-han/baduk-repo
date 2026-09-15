@@ -99,6 +99,8 @@
   --surface-raised: var(--paper-0);
   --surface-sunken: var(--paper-100);
   --surface-overlay: var(--paper-0);
+  /* 모달 뒤를 덮는 막. 검정이 아니라 따뜻한 먹색을 깐다. */
+  --surface-scrim: oklch(0.2 0.012 68 / 0.42);
 
   /* --- 텍스트 ---------------------------------------------------------------
    * primary 15.9:1 / secondary 4.8:1 / tertiary 3.0:1 (page 대비)
@@ -386,6 +388,7 @@
     --surface-raised: oklch(0.22 0.008 70);
     --surface-sunken: oklch(0.15 0.008 70);
     --surface-overlay: oklch(0.25 0.008 70);
+    --surface-scrim: oklch(0 0 0 / 0.6);
 
     --text-primary: oklch(0.94 0.004 85);
     --text-strong: oklch(0.98 0.003 85);
@@ -502,6 +505,7 @@
   --surface-raised: oklch(0.22 0.008 70);
   --surface-sunken: oklch(0.15 0.008 70);
   --surface-overlay: oklch(0.25 0.008 70);
+  --surface-scrim: oklch(0 0 0 / 0.6);
 
   --text-primary: oklch(0.94 0.004 85);
   --text-strong: oklch(0.98 0.003 85);

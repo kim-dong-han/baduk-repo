@@ -1,4 +1,4 @@
-import { ThemeToggle } from './theme-toggle';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 /* ---------------------------------------------------------------------------
  * 참조 시트용 조각들.
@@ -53,7 +53,7 @@ function Row({ children }: { children: React.ReactNode }) {
 
 export function DesignSystemPage() {
   return (
-    <main className="container-page py-12">
+    <div className="container-page py-12">
       {/* React 19 가 title/meta 를 <head> 로 올려준다. */}
       <title>디자인 토큰 · 바둑 AI 기보 분석</title>
       <meta name="robots" content="noindex" />
@@ -450,7 +450,7 @@ export function DesignSystemPage() {
           </div>
         </Section>
       </div>
-    </main>
+    </div>
   );
 }
 

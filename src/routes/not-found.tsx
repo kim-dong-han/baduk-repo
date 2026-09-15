@@ -1,23 +1,27 @@
+import { Compass } from 'lucide-react';
 import { Link } from 'react-router';
+
+import { PageContainer } from '@/components/layout/page-container';
+import { buttonVariants } from '@/components/ui/button-variants';
+import { EmptyState } from '@/components/ui/empty-state';
 
 export function NotFoundPage() {
   return (
-    <main className="container-page flex min-h-dvh max-w-prose flex-col justify-center gap-4">
-      <p className="label-text">404</p>
-      <h1 className="text-3xl">없는 페이지다.</h1>
-      <p className="text-ink-muted">주소를 다시 확인한다.</p>
-      <p>
-        <Link
-          to="/"
-          className="text-link underline decoration-line-strong underline-offset-4 hover:text-link-hover"
-        >
-          처음으로 돌아가기
-        </Link>
-      </p>
-    </main>
+    <PageContainer size="prose">
+      <title>페이지를 찾을 수 없음 · 바둑 AI 기보 분석</title>
+      <EmptyState
+        icon={<Compass />}
+        title="아직 없는 화면입니다"
+        description="주소가 바뀌었거나 아직 만들지 않은 화면입니다. 주요 메뉴의 화면은 순서대로 만들어집니다."
+        action={
+          <Link to="/" className={buttonVariants({ variant: 'secondary' })}>
+            처음으로
+          </Link>
+        }
+      />
+    </PageContainer>
   );
 }
 
 // React Router 는 lazy 라우트에서 `Component` 를 찾는다.
-// 이름은 COMPONENT_RULES.md 대로 두고 별칭으로 규약을 맞춘다.
 export { NotFoundPage as Component };

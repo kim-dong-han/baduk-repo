@@ -61,6 +61,7 @@ Tailwind 기본 팔레트는 **통째로 지웠다**(`--color-*: initial`). `bg-
 | `--surface-page`   | `bg-page`         | 페이지 배경 (기본)         | —                      |
 | `--surface-raised` | `bg-raised`       | 실제로 띄워야 하는 표면    | —                      |
 | `--surface-sunken` | `bg-sunken`       | 가라앉은 영역, 코드 블록   | —                      |
+| `--surface-scrim`  | `bg-scrim`        | 모달 뒤를 덮는 막          | —                      |
 | `--text-primary`   | `text-ink`        | 본문                       | 15.9:1                 |
 | `--text-strong`    | `text-ink-strong` | 제목                       | 19.4:1                 |
 | `--text-secondary` | `text-ink-muted`  | 보조 설명                  | 4.8:1                  |
@@ -170,6 +171,8 @@ p-1  p-2  p-3  p-4  p-6  p-8  p-10  p-12  p-16  p-20
 - 카드/패널 안쪽 **24px**
 - 제목과 본문 사이 **16px**
 - 라벨과 값 사이 **4~8px**
+
+**컨트롤 높이는 여백 사다리와 별개다.** 버튼·입력은 **36 / 44 / 48px** 세 가지만 쓴다. 기본은 44px 이며, 이는 터치 대상 최소 크기다.
 
 ---
 

@@ -37,6 +37,7 @@
   --color-raised: var(--surface-raised);
   --color-sunken: var(--surface-sunken);
   --color-overlay: var(--surface-overlay);
+  --color-scrim: var(--surface-scrim);
 
   /* --- 텍스트: text-ink / text-ink-muted ----------------------------------- */
   --color-ink: var(--text-primary);
