@@ -129,17 +129,21 @@ export function readRatio(name: string, fallback: number, element?: Element): nu
 export function onThemeChange(callback: () => void): () => void {
   if (typeof window === 'undefined') return () => {};
 
-  const media = window.matchMedia('(prefers-color-scheme: dark)');
-  media.addEventListener('change', callback);
+  // jsdom 처럼 matchMedia · MutationObserver 가 없는 환경에서도 동작해야 한다.
+  const media =
+    typeof window.matchMedia === 'function'
+      ? window.matchMedia('(prefers-color-scheme: dark)')
+      : null;
+  media?.addEventListener('change', callback);
 
-  const observer = new MutationObserver(callback);
-  observer.observe(document.documentElement, {
+  const observer = typeof MutationObserver === 'function' ? new MutationObserver(callback) : null;
+  observer?.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['data-theme'],
   });
 
   return () => {
-    media.removeEventListener('change', callback);
-    observer.disconnect();
+    media?.removeEventListener('change', callback);
+    observer?.disconnect();
   };
 }

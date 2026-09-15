@@ -12,7 +12,7 @@ export default defineConfig({
   },
 
   server: {
-    port: 5173,
+    port: 5174,
     // 백엔드가 아직 없을 때는 MSW 를 쓴다. 실제 백엔드를 붙일 때 프록시가 필요하면
     // 여기에 proxy 를 추가하는 대신 VITE_API_BASE_URL 을 바꾸는 쪽을 먼저 검토한다.
   },

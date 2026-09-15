@@ -19,6 +19,9 @@ export function HomePage() {
         <Link to="/layout-demo" className={buttonVariants({ variant: 'primary' })}>
           레이아웃 데모 보기
         </Link>
+        <Link to="/board-demo" className={buttonVariants({ variant: 'secondary' })}>
+          바둑판 데모 보기
+        </Link>
         <Link to="/design-system" className={buttonVariants({ variant: 'secondary' })}>
           디자인 토큰 보기
         </Link>

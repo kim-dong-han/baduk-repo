@@ -248,28 +248,34 @@ Board 는 "어디에 무엇을 그려라"를 받고, "여기가 눌렸다"를 �
 />
 ```
 
-### 예상 구조
+### 구조
 
 ```
 components/board/
-├─ board.tsx                외부에 공개하는 조립 컴포넌트
-├─ board-canvas.tsx         Canvas 요소 · 크기 · devicePixelRatio · 레이어
-├─ board-interaction.tsx    포인터·터치·키보드 입력 → 교차점 이벤트
-├─ board-controls.tsx       확대/뒤집기 같은 판 자체의 조작
+├─ board.tsx                외부에 공개하는 컴포넌트. 레이어 3장과 입력을 조립한다
+├─ board-theme.ts           디자인 토큰 → Canvas 가 쓸 색·비율
+├─ coordinate-system.ts     픽셀 ↔ 교차점 ↔ GTP 표기, 판 치수 (순수 함수)
+├─ types.ts                 Stone · Marker · Candidate · Variation · Territory
+├─ use-board-size.ts        컨테이너 폭 관찰 → 판 크기와 화면 배율
 ├─ renderers/
-│  ├─ grid-renderer.ts      판 · 격자 · 화점 · 좌표 그리기
-│  └─ stone-renderer.ts     돌 · 마커 그리기
-├─ coordinate-system.ts     픽셀 ↔ 교차점 ↔ 표기 변환 (순수 함수)
+│  ├─ grid-renderer.ts      판 · 격자 · 화점 · 좌표
+│  ├─ stone-renderer.ts     돌 · 수순 번호 · 마지막 수
+│  └─ overlay-renderer.ts   집 예측 · 후보수 · 변화도 · 표식 · hover · 커서
 └─ index.ts
 ```
 
-실제 구조는 구현하면서 합리적으로 조정한다. 몇 가지는 미리 정해 둔다.
+`board-canvas` · `board-interaction` 을 따로 두지 않았다. 캔버스 3장과 포인터·키보드 처리가 모두
+같은 치수(metrics)와 같은 ref 를 보기 때문에, 나누면 그 값을 다시 넘기는 배관만 늘어난다.
+판 자체의 조작(`board-controls`)은 아직 필요한 화면이 없어 만들지 않았다.
+
+정해 둔 것.
 
 - **`StoneRenderer` 와 `CoordinateSystem` 은 React 컴포넌트가 아니라 순수 모듈이다.** Canvas 에 돌 361개를 React 컴포넌트로 그리면 수순을 넘길 때마다 재조정(reconciliation)이 일어난다. 렌더러는 `ctx` 와 데이터를 받아 그리는 함수로 둔다.
 - 순수 모듈로 두면 **그리기 직전의 계산**을 렌더링 없이 테스트할 수 있다. 좌표 변환은 반드시 단위 테스트를 쓴다.
 - 색과 비율은 코드에 적지 않고 디자인 토큰에서 읽는다(`src/lib/design/tokens.ts` 의 `BOARD_COLOR_TOKENS`, `BOARD_RATIO_TOKENS`). 테마가 바뀌면 `onThemeChange()` 로 다시 그린다.
 - 판(격자)과 돌·오버레이와 hover 는 **레이어를 나눈다.** 마우스가 움직일 때 격자까지 다시 그리지 않는다.
-- 수순 이동·AI 후보수 표시 같은 **분석 전용 조작은 `BoardControls` 가 아니라 `features/analysis`** 에 둔다. `BoardControls` 는 어느 화면에서 써도 의미가 있는 조작만 갖는다.
+- 수순 이동·AI 후보수 표시 같은 **분석 전용 조작은 `features/analysis`** 에 둔다. 판이 갖는 조작은 어느 화면에서 써도 의미가 있는 것만이다.
+- **hover 는 React 상태를 건드리지 않는다.** ref 에 담고 오버레이 층만 다시 그린다. 마우스가 움직일 때마다 판 전체가 다시 렌더되면 수순이 많은 화면에서 느려진다.
 
 ### Board 의 접근성
 
